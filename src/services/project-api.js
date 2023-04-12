@@ -1,7 +1,6 @@
 import axios from 'axios';
-import { BASE_URL } from '../helpers/constants';
 
-axios.defaults.baseURL = BASE_URL;
+axios.defaults.baseURL = 'http://localhost:4000';
 
 export async function fetchProjects() {
   const { data } = await axios.get('/projects');
@@ -20,7 +19,7 @@ export async function deleteProject(projectId) {
 
 export async function findProjecrById(projectId) {
   const { data } = await axios.get(`/sprint/${projectId}`);
-  return data.data;
+  return data;
 }
 
 export async function updateProjectName(projectId, name) {

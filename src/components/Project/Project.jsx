@@ -1,32 +1,64 @@
-import { useEffect, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-
-import ButtonAdd from '../ButtonAdd';
-
 import styles from './Project.module.scss';
 import sprite from '../../sprite.svg';
-
+import ButtonAdd from '../ButtonAdd';
+import { useDispatch } from 'react-redux';
 import { modalActions } from '../../redux/modal';
-import projectOperations from '../../redux/projects/project-operations';
-import { getProject } from '../../redux/projects/project-selectors';
-import ButtonAddPeople from '../ButtonAddPeople';
-import ProjectName from '../ProjectName';
 
-const Project = ({ match }) => {
+const project = {
+  id: 2,
+  name: 'project2',
+  description: 'Короткий опис проекту...',
+  sprints: [
+    {
+      id: '1',
+      sprint_name: 'Sprint Burndown Chart 1',
+      date_start: '10 июля',
+      date_end: '20 июля',
+    },
+    {
+      id: '2',
+      sprint_name: 'Sprint Burndown Chart 2',
+      date_start: '10 июля',
+      date_end: '20 июля',
+    },
+    {
+      id: '3',
+      sprint_name: 'Sprint Burndown Chart 3',
+      date_start: '10 июля',
+      date_end: '20 июля',
+    },
+    {
+      id: '4',
+      sprint_name: 'Sprint Burndown Chart 4',
+      date_start: '10 июля',
+      date_end: '20 июля',
+    },
+  ],
+};
+
+const Project = ({ match, location }) => {
+  const [changePojectName, setChangeProjectName] = useState(false);
+  const [projectName, setProjectName] = useState(project.name);
+
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    console.log('rerender');
-    dispatch(projectOperations.findProjectById(match.params.projectId));
-  }, []);
+  const handleShowInput = () => {
+    setChangeProjectName(prevState => !prevState);
+  };
 
-  const project = useSelector(getProject);
+  const handleChangeProjectName = e => {
+    setProjectName(e.target.value);
+  };
 
+  const handleAddPeople = () => {
+    dispatch(modalActions.isOpenModal());
+    dispatch(modalActions.openModalAddPeople());
+  };
   const handleAddSprint = () => {
     dispatch(modalActions.isOpenModal());
     dispatch(modalActions.openModalSprint());
-    document.querySelector('body').classList.add('overflow__body');
   };
   const hendleDeleteSprint = e => {
     e.preventDefault();
@@ -36,12 +68,53 @@ const Project = ({ match }) => {
   return (
     <div className={styles.project_block}>
       <div className={styles.project_header}>
-        <ProjectName name={project?.project.name} />
+        <div className={styles.project}>
+          {changePojectName ? (
+            <input
+              className={styles.input}
+              value={projectName}
+              onChange={handleChangeProjectName}
+            />
+          ) : (
+            <p className={styles.project_title}>{projectName}</p>
+          )}
+          {changePojectName ? (
+            <button
+              type="button"
+              className={styles.button}
+              onClick={handleShowInput}
+            >
+              <svg className={styles.svg}>
+                <use href={sprite + '#icon-plus'} />
+              </svg>
+            </button>
+          ) : (
+            <button
+              type="button"
+              className={styles.button}
+              onClick={handleShowInput}
+            >
+              <svg className={styles.svg}>
+                <use href={sprite + '#icon-pen'} />
+              </svg>
+            </button>
+          )}
+        </div>
         <ButtonAdd text="Create sprint" onClick={handleAddSprint} />
       </div>
-      <ButtonAddPeople />
+      <button
+        onClick={handleAddPeople}
+        className={styles.button_add_people}
+        type="button"
+      >
+        <svg className={styles.svg}>
+          <use href={sprite + '#icon-add-people'} />
+        </svg>
+        <p className={styles.text}>add people</p>
+      </button>
+
       <ul className={styles.list}>
-        {project?.sprints.sprints.map(item => (
+        {project.sprints.map(item => (
           <li key={item.id}>
             <Link to={`${match.url}/${item.id}`} className={styles.sprint}>
               <h3 className={styles.title}>{item.sprint_name}</h3>

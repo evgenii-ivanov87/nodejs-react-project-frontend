@@ -73,17 +73,16 @@ function App() {
             component={LoginPage}
             redirectTo={routes.projects}
           />
-
-          <PrivateRoute
-            exact
-            path={routes.projectDetails}
-            component={ProjectDetailsView}
-            redirectTo={routes.login}
-          />
           <PrivateRoute
             exact
             path={routes.sprint}
             component={SprintView}
+            redirectTo={routes.login}
+          />
+          <PrivateRoute
+            exact
+            path={routes.projectDetails}
+            component={ProjectDetailsView}
             redirectTo={routes.login}
           />
           <PrivateRoute

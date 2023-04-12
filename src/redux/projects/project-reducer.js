@@ -4,14 +4,13 @@ import projectActions from './project-actions';
 
 const projects = createReducer([], {
   [projectActions.fetchProjectsSuccess]: (state, { payload }) => payload,
-
-  [projectActions.createProjectSuccess]: (state, { payload }) => [
-    ...state,
+  [projectActions.createProjectSuccess]: ({ data }, { payload }) => [
+    ...data.projects,
     payload,
   ],
   [projectActions.deleteProjectSuccess]: (state, { payload }) =>
-    state.filter(({ _id }) => _id !== payload),
-
+    state.projects.projects.filter(({ id }) => id !== payload),
+  [projectActions.fetchProjectByIdSuccess]: (state, { payload }) => payload,
   [projectActions.addPeopleToProjectSuccess]: (state, { payload }) => [
     ...state,
     payload,
@@ -21,12 +20,8 @@ const projects = createReducer([], {
     payload,
   ],
 });
-const project = createReducer(null, {
-  [projectActions.fetchProjectByIdSuccess]: (state, { payload }) => payload,
-});
 
 const sprint = createReducer([], {
- 
   [projectActions.createSprintSuccess]: (state, { payload }) => [
     ...state,
     payload,
@@ -52,14 +47,6 @@ const task = createReducer([], {
     payload,
   ],
   [projectActions.searchTaskByNameSuccess]: (state, { payload }) => payload,
-});
-
-const currentProject = createReducer([], {
-  [projectActions.setCurrentProject]: (state, { payload }) => payload,
-});
-
-const currentSprint = createReducer([], {
-  [projectActions.setCurrentSprint]: (state, { payload }) => payload,
 });
 
 const isLoading = createReducer(false, {
@@ -109,10 +96,7 @@ const isLoading = createReducer(false, {
 
 export default combineReducers({
   projects,
-  project,
   sprint,
   task,
   isLoading,
-  currentProject,
-  currentSprint,
 });

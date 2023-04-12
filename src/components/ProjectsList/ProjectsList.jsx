@@ -6,7 +6,6 @@ import sprite from '../../sprite.svg';
 import routes from '../../routes';
 import projectOperations from '../../redux/projects/project-operations';
 import { projectsData } from '../../redux/projects/project-selectors';
-import { projectActions } from '../../redux/projects';
 
 const ProjectsList = () => {
   const dispatch = useDispatch();
@@ -22,24 +21,13 @@ const ProjectsList = () => {
 
     console.log('delete project' + id);
   };
-
-  const getCurrentIdProject = id => {
-    dispatch(projectActions.setCurrentProject(id));
-  };
-
   return (
     <ul className={styles.list}>
       {projects?.map(item => (
-        <li
-          className={styles.item}
-          key={item._id}
-          onClick={() => {
-            getCurrentIdProject(item._id);
-          }}
-        >
+        <li className={styles.item} key={item._id}>
           <Link
             className={styles.project}
-            to={`${routes.projects}/${item._id}/sprints`}
+            to={`${routes.projects}/${item._id}`}
           >
             <h3 className={styles.project_title}>{item.name}</h3>
             <p className={styles.project_text}>{item.description}</p>
